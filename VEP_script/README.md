@@ -6,7 +6,10 @@
 - `02_submit_vep.py`: Submit array job according to the number of VCFs
 - `02_vep.sh`: Annotate small variants with Ensembl VEP
 - `03_post_vep.sh`: Remove the temporary files and merge the annotation files
-- `job_utils.sh`: Log file print information setting
+- `utils/`
+  - `job_utils.sh`: Log file print information setting
+  - `mane_plus_clinical.wchr.buffer5000bp.bed`: 65 MANE Plus Clinical transcript region (with chr)
+  - `mane_plus_clinical.wochr.buffer5000bp.bed`: 65 MANE Plus Clinical transcript region (without chr)
 
 ## Usage
 ### Required data
