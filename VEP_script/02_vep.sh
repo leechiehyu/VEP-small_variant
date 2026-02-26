@@ -77,7 +77,7 @@ module load Anaconda/Anaconda3
 conda activate /opt/ohpc/Taiwania3/pkg/biology/vep/vep_v115
 
 # log file print info setting
-source $UTILS_PATH/job_utils.sh
+source $UTILS_PATH/utils/job_utils.sh
 set -euo pipefail
 
 
