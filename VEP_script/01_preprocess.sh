@@ -20,7 +20,7 @@ module load biology
 module load BCFtools/1.18
 
 # log file print info setting
-source $UTILS_PATH/job_utils.sh
+source $UTILS_PATH/utils/job_utils.sh
 set -euo pipefail
 
 mkdir -p $OUTPUT_VCF_PATH/logs
@@ -47,12 +47,12 @@ if [[ "$checkCHR" =~ ^chr ]]; then
     echo "Info: Chromosomes have 'chr' prefix. Filtering with 'chr'..."
     bcftools view -t $CHRpresent1 $INPUT_VCF -Oz -o ${SAMPLE}.exChr.vcf.gz
     REF_FASTA=/staging/reserve/paylong_ntu/AI_SHARE/reference/GATK_bundle/2.8/hg38/Homo_sapiens_assembly38.fasta
-    MANE_PLUS_CLINICAL_BED=/staging/biology/r12455009/test_vep/small_variant/mane_plus_clinical.wchr.buffer5000bp.bed
+    MANE_PLUS_CLINICAL_BED=$UTILS_PATH/utils/mane_plus_clinical.wchr.buffer5000bp.bed
 else
     echo "Info: Chromosomes do not have 'chr' prefix. Filtering without 'chr'..."
     bcftools view -t $CHRpresent2 $INPUT_VCF -Oz -o ${SAMPLE}.exChr.vcf.gz
     REF_FASTA=/staging/reserve/paylong_ntu/AI_SHARE/reference/VEP/vep_v112.0/cache/reference/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
-    MANE_PLUS_CLINICAL_BED=/staging/biology/r12455009/test_vep/small_variant/mane_plus_clinical.wochr.buffer5000bp.bed
+    MANE_PLUS_CLINICAL_BED=$UTILS_PATH/utils/mane_plus_clinical.wochr.buffer5000bp.bed
 fi
 
 # Step 2. Normalize & remove duplicate sites
