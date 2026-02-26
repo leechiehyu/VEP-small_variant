@@ -15,7 +15,7 @@ UTILS_PATH="input_script_path"
 module load biology
 module load BCFtools/1.18
 # log file print info setting
-source $UTILS_PATH/job_utils.sh
+source $UTILS_PATH/utils/job_utils.sh
 set -euo pipefail
 
 TIME=`date +%Y%m%d%H%M`
