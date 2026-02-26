@@ -1,5 +1,4 @@
 # Annotation scripts
-This folder contains the pipeline of small variant annotation with Ensembl VEP v115.1.
 
 ## Directory structure
 - `00_vep_batch_submitter.py`: Submit the slurm job(s) for annotating the VCFs under the given directory
