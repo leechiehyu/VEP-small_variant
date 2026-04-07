@@ -25,6 +25,30 @@ cd VEP_script/
 python 00_vep_batch_submitter.py /path/to/input/vcf/ /output/path/
 ```
 
+## Reference Genomes
+The workflow automatically detects the chromosome naming convention and applies the appropriate reference during normalization:
+- **UCSC Style (with "chr" prefix):** Uses `Homo_sapiens_assembly38.fasta`.
+- **Ensembl Style (without "chr" prefix):** Uses `Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz`.
+
+### Customization: Changing Reference Genomes
+If you need to use a different reference FASTA, you must manually update the `REF_FASTA` variable in `01_preprocess.sh`. 
+
+> [!IMPORTANT]
+> The script uses a conditional check to handle chromosome naming conventions (with or without the "chr" prefix). Ensure you update the correct path within the `if-else` block:
+> - **With "chr" prefix**: Update `REF_FASTA` inside the `if` block.
+> - **Without "chr" prefix**: Update `REF_FASTA` inside the `else` block.
+
+**Example in `01_preprocess.sh`:**
+```bash
+if [[ "$checkCHR" =~ ^chr ]]; then
+    # Update this path for 'chr' prefixed VCFs
+    REF_FASTA=/path/to/your/custom_hg38_with_chr.fasta
+else
+    # Update this path for non-'chr' prefixed VCFs
+    REF_FASTA=/path/to/your/custom_GRCh38_no_chr.fa.gz
+fi
+```
+
 ## Databases and plugins
 ### Data in the VEP cache
 - **Ensembl database (VEP)**, version 115.1
