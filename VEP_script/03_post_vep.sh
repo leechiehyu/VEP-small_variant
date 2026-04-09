@@ -68,7 +68,7 @@ fi
 
 
 #############################
-echo -e "--- VEP annotation complete, start concat ---\n"
+echo -e "$(date '+%Y-%m-%d %H:%M:%S') - Starting to concatenate VCFs\n"
 #############################
 cd $OUTPUT_VCF_PATH
 rm -rf $OUTPUT_VCF_PATH/temp_chr
@@ -83,24 +83,24 @@ FINAL_VCF=${SAMPLE}.vep.vcf.gz
 bcftools concat --naive-force -f <(printf "%s\n" "${VEP_FILES[@]}") -Oz -o $FINAL_VCF
 bcftools index -t -f $FINAL_VCF
 
-echo -e "--- Concat complete. Saving to $FINAL_VCF ---"
+echo -e "$(date '+%Y-%m-%d %H:%M:%S') - Concat complete. Saving to $FINAL_VCF\n"
 
 rm -rf ${SAMPLE}.vep.chr*.vcf.gz
 
 variant_count=$(bcftools view -H "$FINAL_VCF" | wc -l)
-echo -e "\n--- Total variants in final VEP annotated VCF: $variant_count ---"
+echo -e "[INFO] - Total variants in final VEP annotated VCF: $variant_count"
 
 FINAL_VCF_MANE=${SAMPLE}.vep.mane_plus_clinical.vcf.gz
 bcftools index -t -f $FINAL_VCF_MANE
 variant_count=$(bcftools view -H "$FINAL_VCF_MANE" | wc -l)
-echo -e "--- Total variants with both MANE select and MANE plus clinical in VEP annotated VCF: $variant_count ---\n"
+echo -e "[INFO] - Total variants with both MANE select and MANE plus clinical in VEP annotated VCF: ${variant_count}\n"
 
 
 # generate tsv
-bcftools +split-vep -H -f '%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t%AC\t%CSQ\n' -A tab $FINAL_VCF | \
+bcftools +split-vep -H -f '%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t%CSQ\n' -A tab $FINAL_VCF | \
     sed -E '1s/\[[0-9]+\]//g' | sed 's/\#//' > ${SAMPLE}.vep.tsv
 
-bcftools +split-vep -H -f '%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t%AC\t%CSQ\n' -A tab $FINAL_VCF_MANE | \
+bcftools +split-vep -H -f '%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t%CSQ\n' -A tab $FINAL_VCF_MANE | \
     sed -E '1s/\[[0-9]+\]//g' | sed 's/\#//' > ${SAMPLE}.vep.mane_plus_clinical.tsv
 
 echo -e "\n$(date '+%Y-%m-%d %H:%M:%S') Generate TSV done"
