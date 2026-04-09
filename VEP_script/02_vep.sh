@@ -39,8 +39,8 @@ LoFtool=${VEP_PLUGIN_DIR}/LoFtool_scores.txt
 pLI=${VEP_PLUGIN_DIR}/pLI_values.txt
 
 # custom annotation file paths
-DVD=${Custom_Annotation}/DVD/DVDr9_GRCh38.filter.vcf.gz
-ClinVar=${Custom_Annotation}/ClinVar/clinvar_20250106.norm.vcf.gz
+DVD=/work/r12455009/DVD/DVDv9.2_GRCh38.filter.vcf.gz
+ClinVar=/staging/biology/r12455009/test_vep/small_variant/DB/ClinVar/clinvar_20251109.cleaned.vcf.gz
 MitoMap=${Custom_Annotation}/MitoMap/MitoMap_disease_20230621.norm.vcf.gz
 # TWB_NTU_SNV=${Custom_Annotation}/TWB_NTU_SNV/TWB1490_snv_custom_addAF.vcf.bgz
 # TWB_official_SNV=${Custom_Annotation}/TWB_official_SNV/TWB_official_snv_indel_AF.vcf.gz
@@ -50,29 +50,26 @@ gnomADv4exome="/work/r12455009/gnomAD_v4.1_SNV/exomes/gnomad.exomes.v4.1.sites.c
 gnomADv4genome="/work/r12455009/gnomAD_v4.1_SNV/genomes/gnomad.genomes.v4.1.sites.chr###CHR###.vcf.bgz"
 gnomADv3cov="/work/r12455009/gnomAD_v4.1_SNV/gnomad.genomes.r3.0.1.meanDP.bed.gz"
 rmsk="/staging/biology/r12455009/test_vep/small_variant/DB/repeatMasker.bed.gz"
-plp_aachange="/staging/biology/r12455009/test_vep/small_variant/DB/ClinVar/test/mane_select_dist200_rank3rd/other/hg38_pathogenicDB_AAchange_vClinVar20251109.vcf.gz"
+plp_aachange="/staging/biology/r12455009/test_vep/small_variant/DB/hg38_pathogenicDB_AAchange_vClinVar20251109.select.vcf.gz"
 TWB_mtDNA=${Custom_Annotation}/TWB_mtDNA/twb1465_mtDNA_af.vcf.bgz
 gnomAD_mtDNA=${Custom_Annotation}/TWB_mtDNA/gnomad_mtDNA_af.vcf.bgz
 
 # custom annotation setting
-custom_dvd="file=${DVD},short_name=DVD_SNV,format=vcf,type=exact,fields=GENE%FINAL_PATHOGENICITY"
-# custom_clinvar="file=${ClinVar},short_name=ClinVar,format=vcf,type=exact,coords=0,fields=ALLELEID%CLNSIG%CLNSIGCONF%CLNREVSTAT%NumberSubmitters"
-custom_clinvar="file=${ClinVar},short_name=ClinVar,format=vcf,type=exact,coords=0,fields=CLNSIG%CLNREVSTAT%ALLELEID"
+custom_dvd="file=${DVD},short_name=DVD_SNV,format=vcf,type=exact,fields=GENE%Variant_Classification"
+custom_clinvar="file=${ClinVar},short_name=ClinVar,format=vcf,type=exact,coords=0,fields=ALLELEID%CLNSIG%CLNSIGCONF%CLNREVSTAT%NumberSubmitters%NAME"
 custom_mitomap="file=${MitoMap},short_name=MitoMap,format=vcf,type=exact,fields=aachange%DiseaseStatus"
 custom_twb_ntu_snv="file=${TWB_NTU_SNV},short_name=TWB1490_SNV,format=vcf,type=exact,fields=AF"
 custom_twb_official_snv="file=${TWB_official_SNV},short_name=TWB_official_SNV,format=vcf,type=exact,fields=AF"
-custom_gnomade="file=${gnomADv4exome},short_name=gnomAD_exome,format=vcf,type=exact,fields=FILTER%AN%nhomalt%AN_eas%nhomalt_eas"
-custom_gnomadg="file=${gnomADv4genome},short_name=gnomAD_genome,format=vcf,type=exact,fields=FILTER%AN%nhomalt%AN_eas%nhomalt_eas"
+custom_gnomade="file=${gnomADv4exome},short_name=gnomAD_exome,format=vcf,type=exact,fields=FILTER%AN%AF%nhomalt%AN_eas%AF_eas%nhomalt_eas"
+custom_gnomadg="file=${gnomADv4genome},short_name=gnomAD_genome,format=vcf,type=exact,fields=FILTER%AN%AF%nhomalt%AN_eas%AF_eas%nhomalt_eas"
 custom_gnomad_cov="file=${gnomADv3cov},short_name=gnomAD_genome_cov,format=bed,type=overlap,coords=0"
 custom_rmsk="file=${rmsk},short_name=RepeatMasker,format=bed,type=overlap,coords=1"
-custom_plp_aachange="file=${plp_aachange},short_name=CLN_VEP,format=vcf,type=exact,fields=Nstar%Consequence%GENE_NAMES%SYMBOL%RefSeq_nuc%Ensembl_nuc%Pchange%Feature%HGVSp%AAchange%Protein_position"
+custom_plp_aachange="file=${plp_aachange},short_name=CLN_VEP,format=vcf,type=exact,fields=Nstar%GENE_NAMES%SYMBOL%Ensembl_nuc%Pchange%Consequence%Feature%AAchange%Protein_position"
 custom_twb_mtdna="file=${TWB_mtDNA},short_name=TWB_mtDNA,format=vcf,type=exact,fields=AF_het_vaf05"
 custom_gnomad_mtdna="file=${gnomAD_mtDNA},short_name=gnomAD_mtDNA,format=vcf,type=exact,fields=AF_hom%AF_het%AF_hom_eas%AF_het_eas"
 
 # modules and environment setting
 source /etc/profile.d/lmod.sh
-module load biology
-module load BCFtools/1.18
 module load Anaconda/Anaconda3
 conda activate /opt/ohpc/Taiwania3/pkg/biology/vep/vep_v115
 
@@ -91,7 +88,7 @@ INPUT_VCF_FILE=$(sed -n "${ARRAY_OFFSET}p" "$LIST_FILE")
 
 # Check if the INPUT_VCF_FILE is valid
 if [ -z "$INPUT_VCF_FILE" ] || [ ! -f "$INPUT_VCF_FILE" ]; then
-    echo "Error: Cannot find VCF file for array task ID $SLURM_ARRAY_TASK_ID."
+    echo "[Error] $(date '+%Y-%m-%d %H:%M:%S') - Cannot find VCF file for array task ID $SLURM_ARRAY_TASK_ID."
     exit 1
 fi
 
@@ -111,6 +108,9 @@ start_job
 # For transcript selection #
 ############################
 if [[ $CHROM =~ "mane_plus_clinical" ]]; then
+    plp_aachange="/staging/biology/r12455009/test_vep/small_variant/DB/hg38_pathogenicDB_AAchange_vClinVar20251109.clinical.vcf.gz"
+    custom_plp_aachange="file=${plp_aachange},short_name=CLN_VEP,format=vcf,type=exact,fields=Nstar%GENE_NAMES%SYMBOL%Ensembl_nuc%Pchange%Consequence%Feature%AAchange%Protein_position"
+    
     MANE_ORDER="mane_plus_clinical,mane_select"
 else
     MANE_ORDER="mane_select,mane_plus_clinical"
@@ -170,6 +170,4 @@ vep --cache --offline \
     --vcf \
     --compress_output bgzip \
     -o ${SAMPLE}.vep.${CHROM}.vcf.gz
-
-echo -e "\n$(date '+%Y-%m-%d %H:%M:%S') VEP annotation done\n"
 
