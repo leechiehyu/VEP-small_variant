@@ -14,6 +14,17 @@ Usage:
 It will create a subdirectory `VEP_output` under the <output_directory>
 """
 
+if len(sys.argv) != 3:
+    print("\n" + "="*75)
+    print("Error: Incorrect number of arguments.")
+    print("\nUsage:")
+    print(" python 00_vep_batch_submitter.py <input_vcf_directory> <output_directory>")
+    print("\nExample:")
+    print(" python 00_vep_batch_submitter.py /path/to/vcfs /path/to/output")
+    print("="*75 + "\n")
+    
+    sys.exit(1)
+
 # === Arguments ===
 input_vcf_path = os.path.abspath(sys.argv[1])
 input_script_path = os.path.dirname(os.path.abspath(__file__))
