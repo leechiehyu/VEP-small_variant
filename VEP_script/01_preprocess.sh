@@ -34,9 +34,10 @@ start_job
 ########################
 # Input VCF preprocess #
 ########################
-### Running bcftools query (pipefail temporarily disabled)
+## Check chromosome format
+### pipefail temporarily disabled to avoid script exit when encountering error in this step
 set +o pipefail
-checkCHR=$(bcftools query -f '%CHROM\n' $INPUT_VCF | head -n1)
+checkCHR=$(zgrep -v '^#' $INPUT_VCF | head -n 1 | awk '{print $1}')
 set -o pipefail
 
 CHRpresent1="chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY,chrM,chrMT"
@@ -44,12 +45,12 @@ CHRpresent2="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,M,MT"
 
 # Step 1. Keep only chr1-22, X, Y, M (or MT)
 if [[ "$checkCHR" =~ ^chr ]]; then
-    echo "Info: Chromosomes have 'chr' prefix. Filtering with 'chr'..."
+    echo "[Info] $(date '+%Y-%m-%d %H:%M:%S') - Chromosomes have 'chr' prefix. Filtering with 'chr'..."
     bcftools view -t $CHRpresent1 $INPUT_VCF -Oz -o ${SAMPLE}.exChr.vcf.gz
     REF_FASTA=/staging/reserve/paylong_ntu/AI_SHARE/reference/GATK_bundle/2.8/hg38/Homo_sapiens_assembly38.fasta
     MANE_PLUS_CLINICAL_BED=$UTILS_PATH/utils/mane_plus_clinical.wchr.buffer5000bp.bed
 else
-    echo "Info: Chromosomes do not have 'chr' prefix. Filtering without 'chr'..."
+    echo "[Info] $(date '+%Y-%m-%d %H:%M:%S') - Chromosomes do not have 'chr' prefix. Filtering without 'chr'..."
     bcftools view -t $CHRpresent2 $INPUT_VCF -Oz -o ${SAMPLE}.exChr.vcf.gz
     REF_FASTA=/staging/reserve/paylong_ntu/AI_SHARE/reference/VEP/vep_v112.0/cache/reference/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
     MANE_PLUS_CLINICAL_BED=$UTILS_PATH/utils/mane_plus_clinical.wochr.buffer5000bp.bed
