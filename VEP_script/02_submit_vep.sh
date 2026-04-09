@@ -26,36 +26,36 @@ exec > "$logfile" 2>&1
 NFILES=$(cat "$NFILES_FILE" | wc -l)
 
 if [ "$NFILES" -eq 0 ]; then
-    echo "Info: No VCF files were generated during preprocessing. Skipping VEP annotation"
+    echo "[Info] $(date '+%Y-%m-%d %H:%M:%S') - No VCF files were generated during preprocessing. Skipping VEP annotation"
     exit 0
 fi
 
 LAST_INDEX=$((NFILES - 1))
 
 # Submit the VEP array job
-echo "Submitting $NFILES VEP tasks (Array: 0-$LAST_INDEX) using ${SCRIPT_PATH}/${SAMPLE}_vep.sh..."
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Submitting $NFILES VEP tasks (Array: 0-$LAST_INDEX) using ${SCRIPT_PATH}/${SAMPLE}_vep.sh..."
 VEP_ARRAY_ID=$(sbatch --parsable --array=0-$LAST_INDEX ${SCRIPT_PATH}/${SAMPLE}_vep.sh)
 
 if [ -z "$VEP_ARRAY_ID" ]; then
-    echo "Error: Failed to submit VEP array job 02_vep.sh"
+    echo "[Error] $(date '+%Y-%m-%d %H:%M:%S') - Failed to submit VEP array job 02_vep.sh"
     exit 1
 fi
 
-echo "VEP Array Job ID: $VEP_ARRAY_ID"
+echo -e "VEP Array Job ID: ${VEP_ARRAY_ID}\n"
 
 
 ###################
 # VCF combine job #
 ###################
 # Submit the final merge job dependent on the VEP array completion
-echo "Submitting final merge task with dependency on VEP Array $VEP_ARRAY_ID..."
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Submitting final merge task with dependency on VEP Array $VEP_ARRAY_ID..."
 
 MERGE_JOB_ID=$(sbatch --parsable --depend=afterok:$VEP_ARRAY_ID ${SCRIPT_PATH}/${SAMPLE}_post_vep.sh)
 
 if [ -z "$MERGE_JOB_ID" ]; then
-    echo "Error: Failed to submit merge job 03_post_vep.sh"
+    echo "[Error] $(date '+%Y-%m-%d %H:%M:%S') - Failed to submit merge job 03_post_vep.sh"
     exit 1
 fi
 
-echo "Merge Job ID: $MERGE_JOB_ID"
+echo -e "Merge Job ID: ${MERGE_JOB_ID}\n"
 echo "Pipeline control complete. All tasks chained successfully."
