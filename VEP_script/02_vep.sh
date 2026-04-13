@@ -39,8 +39,8 @@ LoFtool=${VEP_PLUGIN_DIR}/LoFtool_scores.txt
 pLI=${VEP_PLUGIN_DIR}/pLI_values.txt
 
 # custom annotation file paths
-DVD=/work/r12455009/DVD/DVDv9.2_GRCh38.filter.vcf.gz
-ClinVar=/staging/biology/r12455009/test_vep/small_variant/DB/ClinVar/clinvar_20251109.cleaned.vcf.gz
+DVD="/work/r12455009/DVD/DVDv9.2_GRCh38.filter.vcf.gz"
+ClinVar="/staging/biology/r12455009/test_vep/small_variant/DB/clinvar_20251109.cleaned.vcf.gz"
 MitoMap=${Custom_Annotation}/MitoMap/MitoMap_disease_20230621.norm.vcf.gz
 # TWB_NTU_SNV=${Custom_Annotation}/TWB_NTU_SNV/TWB1490_snv_custom_addAF.vcf.bgz
 # TWB_official_SNV=${Custom_Annotation}/TWB_official_SNV/TWB_official_snv_indel_AF.vcf.gz
