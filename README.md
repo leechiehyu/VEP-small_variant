@@ -83,7 +83,7 @@ fi
 ### Custom datasets
 - **DVD**, version 9.2
 - **ClinVar**, released 20251109
-- **RepeatMasker**, download from UCSC Table Browser
+- **RepeatMasker**, download from UCSC Table Browser, data last updated: 2022-10-18
 - **gnomAD exome**, version 4.1
 - **gnomAD genome**, version 4.1
 - **gnomAD genome coverage**, version 3
