@@ -21,9 +21,9 @@ cd $OUTPUT_VCF_PATH
 # Path of VEP
 VEP_CACHE=/opt/ohpc/Taiwania3/pkg/biology/DATABASE/VEP/Cache
 VEP_FASTA=/staging/reserve/paylong_ntu/AI_SHARE/reference/VEP/vep_v112.0/cache/reference/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
-VEP_PLUGIN_DIR=/staging/reserve/paylong_ntu/AI_SHARE/reference/VEP/vep_v112.0/plugins
-VEP_PLUGIN_DATA=/staging/reserve/paylong_ntu/AI_SHARE/reference/VEP/vep_v112.0/plugins_data
-Custom_Annotation=/staging/reserve/paylong_ntu/AI_SHARE/reference/VEP/vep_v112.0/custom_annotation
+VEP_PLUGIN_DIR=/staging/reserve/jacobhsu/reference/VEP/plugins
+VEP_PLUGIN_DATA=/staging/reserve/jacobhsu/reference/VEP/plugins_data
+Custom_Annotation=/staging/reserve/jacobhsu/reference/VEP/custom_annotation
 
 # plugin paths
 SpliceAI_snv=${VEP_PLUGIN_DATA}/SpliceAI/spliceai_scores.masked.snv.hg38.vcf.gz
@@ -39,18 +39,16 @@ LoFtool=${VEP_PLUGIN_DIR}/LoFtool_scores.txt
 pLI=${VEP_PLUGIN_DIR}/pLI_values.txt
 
 # custom annotation file paths
-DVD="/work/r12455009/DVD/DVDv9.2_GRCh38.filter.vcf.gz"
-ClinVar="/staging/biology/r12455009/test_vep/small_variant/DB/clinvar_20251109.cleaned.vcf.gz"
+DVD=${Custom_Annotation}/DVD/DVDv9.2_GRCh38.filter.vcf.gz
+ClinVar=${Custom_Annotation}/ClinVar20251109_DB/clinvar_20251109.cleaned.vcf.gz
 MitoMap=${Custom_Annotation}/MitoMap/MitoMap_disease_20230621.norm.vcf.gz
-# TWB_NTU_SNV=${Custom_Annotation}/TWB_NTU_SNV/TWB1490_snv_custom_addAF.vcf.bgz
-# TWB_official_SNV=${Custom_Annotation}/TWB_official_SNV/TWB_official_snv_indel_AF.vcf.gz
-TWB_NTU_SNV=/staging/reserve/jacobhsu/TWB/TWB_1490/VEP_custom_database/TWB1490_snv_custom_addAF.vcf.bgz
-TWB_official_SNV=/staging/reserve/jacobhsu/TWB/TWB_1490/VEP_custom_database/TWB_official_snv_indel_AF.vcf.gz
-gnomADv4exome="/work/r12455009/gnomAD_v4.1_SNV/exomes/gnomad.exomes.v4.1.sites.chr###CHR###.vcf.bgz"
-gnomADv4genome="/work/r12455009/gnomAD_v4.1_SNV/genomes/gnomad.genomes.v4.1.sites.chr###CHR###.vcf.bgz"
-gnomADv3cov="/work/r12455009/gnomAD_v4.1_SNV/gnomad.genomes.r3.0.1.meanDP.bed.gz"
-rmsk="/staging/biology/r12455009/test_vep/small_variant/DB/repeatMasker.bed.gz"
-plp_aachange="/staging/biology/r12455009/test_vep/small_variant/DB/hg38_pathogenicDB_AAchange_vClinVar20251109.select.vcf.gz"
+TWB_NTU_SNV=${Custom_Annotation}/TWB_NTU_SNV/TWB1490_snv_custom_addAF.vcf.bgz
+TWB_official_SNV=${Custom_Annotation}/TWB_official_SNV/TWB_official_snv_indel_AF.vcf.gz
+gnomADv4exome="${Custom_Annotation}/gnomAD_v4.1_SNV/exomes/gnomad.exomes.v4.1.sites.chr###CHR###.vcf.bgz"
+gnomADv4genome="${Custom_Annotation}/gnomAD_v4.1_SNV/genomes/gnomad.genomes.v4.1.sites.chr###CHR###.vcf.bgz"
+gnomADv3cov=${Custom_Annotation}/gnomAD_v4.1_SNV/gnomad.genomes.r3.0.1.meanDP.bed.gz
+rmsk=${Custom_Annotation}/RepeatMasker20221018/repeatMasker.bed.gz
+plp_aachange=${Custom_Annotation}/ClinVar20251109_DB/hg38_pathogenicDB_AAchange_vClinVar20251109.select.vcf.gz
 TWB_mtDNA=${Custom_Annotation}/TWB_mtDNA/twb1465_mtDNA_af.vcf.bgz
 gnomAD_mtDNA=${Custom_Annotation}/TWB_mtDNA/gnomad_mtDNA_af.vcf.bgz
 
@@ -108,7 +106,7 @@ start_job
 # For transcript selection #
 ############################
 if [[ $CHROM =~ "mane_plus_clinical" ]]; then
-    plp_aachange="/staging/biology/r12455009/test_vep/small_variant/DB/hg38_pathogenicDB_AAchange_vClinVar20251109.clinical.vcf.gz"
+    plp_aachange=${Custom_Annotation}/ClinVar20251109_DB/hg38_pathogenicDB_AAchange_vClinVar20251109.clinical.vcf.gz
     custom_plp_aachange="file=${plp_aachange},short_name=CLN_VEP,format=vcf,type=exact,fields=Nstar%GENE_NAMES%SYMBOL%Ensembl_nuc%Pchange%Consequence%Feature%AAchange%Protein_position"
     
     MANE_ORDER="mane_plus_clinical,mane_select"
