@@ -19,8 +19,8 @@ cd $OUTPUT_VCF_PATH
 # Paths and general settings #
 ##############################
 # Path of VEP
-VEP_CACHE=/opt/ohpc/Taiwania3/pkg/biology/DATABASE/VEP/Cache
-VEP_FASTA=/staging/reserve/paylong_ntu/AI_SHARE/reference/VEP/vep_v112.0/cache/reference/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+VEP_CACHE=/staging/reserve/jacobhsu/reference/VEP/Cache
+VEP_FASTA=/staging/reserve/jacobhsu/reference/VEP/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 VEP_PLUGIN_DIR=/staging/reserve/jacobhsu/reference/VEP/plugins
 VEP_PLUGIN_DATA=/staging/reserve/jacobhsu/reference/VEP/plugins_data
 Custom_Annotation=/staging/reserve/jacobhsu/reference/VEP/custom_annotation
