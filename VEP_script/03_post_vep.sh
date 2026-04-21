@@ -23,50 +23,6 @@ logfile=${OUTPUT_VCF_PATH}/logs/${TIME}_${SAMPLE}_concat.log
 start_job
 
 
-############################
-# Extract max runtime from VEP array job logs
-############################
-MAX_RUNTIME_SEC=0
-MAX_RUNTIME_HUMAN=""
-
-echo "Message: Starting to search for log files of VEP array jobs in ${OUTPUT_VCF_PATH}/logs/*_sample_name_*_vep.log"
-
-# find all relevant log files to extract the run time of vep
-for LOG_FILE in ${OUTPUT_VCF_PATH}/logs/*_${SAMPLE}_*_vep.log; do
-    if [ -f "$LOG_FILE" ]; then
-        # 1. Use grep/awk/sed to find and extract the "Total runtime" line
-        RUNTIME_LINE=$(grep "Total runtime:" "$LOG_FILE" || true)
-
-        if [ -n "$RUNTIME_LINE" ]; then
-            # 2. Extract hours, minutes, and seconds
-            HOURS=$(echo "$RUNTIME_LINE" | awk '{print $3}' | tr -d ',')
-            MINUTES=$(echo "$RUNTIME_LINE" | awk '{print $5}' | tr -d ',')
-            SECONDS=$(echo "$RUNTIME_LINE" | awk '{print $7}')
-            
-            # 3. Transform to total seconds
-            CURRENT_RUNTIME_SEC=$(( 10#$HOURS * 3600 + 10#$MINUTES * 60 + 10#$SECONDS ))
-            
-            # 4. Compare and store the maximum
-            if [ "$CURRENT_RUNTIME_SEC" -gt "$MAX_RUNTIME_SEC" ]; then
-                MAX_RUNTIME_SEC="$CURRENT_RUNTIME_SEC"
-                MAX_RUNTIME_HUMAN="$RUNTIME_LINE (from $LOG_FILE)"
-            fi
-        # else: 如果找不到 Total runtime 行，則忽略這個 log
-        fi
-    fi
-done
-
-# 5. Print the result to the log file
-if [ "$MAX_RUNTIME_SEC" -gt 0 ]; then    
-    echo "==================================================================="
-    echo "Max VEP Runtime:"
-    echo "${MAX_RUNTIME_HUMAN}"
-    echo -e "===================================================================\n"
-else
-    echo "Warning: No valid 'Total runtime:' record found in VEP array logs."
-fi
-
-
 #############################
 echo -e "$(date '+%Y-%m-%d %H:%M:%S') - Starting to concatenate VCFs\n"
 #############################
