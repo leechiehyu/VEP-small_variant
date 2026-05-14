@@ -44,6 +44,7 @@ ClinVar=${Custom_Annotation}/ClinVar20251109_DB/clinvar_20251109.cleaned.vcf.gz
 MitoMap=${Custom_Annotation}/MitoMap/MitoMap_disease_20230621.norm.vcf.gz
 TWB_NTU_SNV=${Custom_Annotation}/TWB_NTU_SNV/TWB1490_snv_custom_addAF.vcf.bgz
 TWB_official_SNV=${Custom_Annotation}/TWB_official_SNV/TWB_official_snv_indel_AF.vcf.gz
+SG10K_SNV="${Custom_Annotation}/SG10K/SG10K_Health_r5.3.2.sites.chr###CHR###.filtered.vcf.gz"
 gnomADv4exome="${Custom_Annotation}/gnomAD_v4.1_SNV/exomes/gnomad.exomes.v4.1.sites.chr###CHR###.vcf.bgz"
 gnomADv4genome="${Custom_Annotation}/gnomAD_v4.1_SNV/genomes/gnomad.genomes.v4.1.sites.chr###CHR###.vcf.bgz"
 gnomADv3cov=${Custom_Annotation}/gnomAD_v4.1_SNV/gnomad.genomes.r3.0.1.meanDP.bed.gz
@@ -58,11 +59,12 @@ custom_clinvar="file=${ClinVar},short_name=ClinVar,format=vcf,type=exact,coords=
 custom_mitomap="file=${MitoMap},short_name=MitoMap,format=vcf,type=exact,fields=aachange%DiseaseStatus"
 custom_twb_ntu_snv="file=${TWB_NTU_SNV},short_name=TWB1490_SNV,format=vcf,type=exact,fields=AF"
 custom_twb_official_snv="file=${TWB_official_SNV},short_name=TWB_official_SNV,format=vcf,type=exact,fields=AF"
+custom_sg10k_snv="file=${SG10K_SNV},short_name=SG10K,format=vcf,type=exact,fields=AF%AF_SgChinese%AF_SgMalay%AF_SgIndian"
 custom_gnomade="file=${gnomADv4exome},short_name=gnomAD_exome,format=vcf,type=exact,fields=FILTER%AN%AF%nhomalt%AN_eas%AF_eas%nhomalt_eas"
 custom_gnomadg="file=${gnomADv4genome},short_name=gnomAD_genome,format=vcf,type=exact,fields=FILTER%AN%AF%nhomalt%AN_eas%AF_eas%nhomalt_eas"
 custom_gnomad_cov="file=${gnomADv3cov},short_name=gnomAD_genome_cov,format=bed,type=overlap,coords=0"
 custom_rmsk="file=${rmsk},short_name=RepeatMasker,format=bed,type=overlap,coords=1"
-custom_plp_aachange="file=${plp_aachange},short_name=CLN_VEP,format=vcf,type=exact,fields=Nstar%GENE_NAMES%SYMBOL%Ensembl_nuc%Pchange%Consequence%Feature%AAchange%Protein_position"
+custom_plp_aachange="file=${plp_aachange},short_name=CLN_VEP,format=vcf,type=exact,fields=Feature%AAchange%Protein_position"
 custom_twb_mtdna="file=${TWB_mtDNA},short_name=TWB_mtDNA,format=vcf,type=exact,fields=AF_het_vaf05"
 custom_gnomad_mtdna="file=${gnomAD_mtDNA},short_name=gnomAD_mtDNA,format=vcf,type=exact,fields=AF_hom%AF_het%AF_hom_eas%AF_het_eas"
 
@@ -107,7 +109,7 @@ start_job
 ############################
 if [[ $CHROM =~ "mane_plus_clinical" ]]; then
     plp_aachange="${Custom_Annotation}/ClinVar20251109_DB/hg38_pathogenicDB_AAchange_vClinVar20251109.clinical.vcf.gz"
-    custom_plp_aachange="file=${plp_aachange},short_name=CLN_VEP,format=vcf,type=exact,fields=Nstar%GENE_NAMES%SYMBOL%Ensembl_nuc%Pchange%Consequence%Feature%AAchange%Protein_position"
+    custom_plp_aachange="file=${plp_aachange},short_name=CLN_VEP,format=vcf,type=exact,fields=Feature%AAchange%Protein_position"
     
     MANE_ORDER="mane_plus_clinical,mane_select"
 else
@@ -157,6 +159,7 @@ vep --cache --offline \
     --custom "${custom_mitomap}" \
     --custom "${custom_twb_ntu_snv}" \
     --custom "${custom_twb_official_snv}" \
+    --custom "${custom_sg10k_snv}" \
     --custom "${custom_gnomade}" \
     --custom "${custom_gnomadg}" \
     --custom "${custom_gnomad_cov}" \
