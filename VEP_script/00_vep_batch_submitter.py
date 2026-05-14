@@ -32,7 +32,7 @@ output_vcf_path = os.path.abspath(os.path.join(sys.argv[2], "VEP_output"))
 script_output_dir = output_vcf_path
 os.makedirs(script_output_dir, exist_ok=True)
 
-vcf_files = [f for f in os.listdir(input_vcf_path) if f.endswith(".vcf.gz")]
+vcf_files = [f for f in os.listdir(input_vcf_path) if f.endswith((".vcf.gz", ".vcf"))]
 
 # === Bash Script Template ===
 bash_template = """#!/bin/bash
