@@ -70,7 +70,7 @@ custom_gnomad_mtdna="file=${gnomAD_mtDNA},short_name=gnomAD_mtDNA,format=vcf,typ
 
 # modules and environment setting
 source /etc/profile.d/lmod.sh
-module load Anaconda/Anaconda3
+module load biology Anaconda/Anaconda3
 conda activate /opt/ohpc/Taiwania3/pkg/biology/vep/vep_v115
 
 # log file print info setting
