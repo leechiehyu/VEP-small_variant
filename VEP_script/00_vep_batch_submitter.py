@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import subprocess
 import time
@@ -28,8 +29,8 @@ if len(sys.argv) != 3:
 # === Arguments ===
 input_vcf_path = os.path.abspath(sys.argv[1])
 input_script_path = os.path.dirname(os.path.abspath(__file__))
-output_vcf_path = os.path.abspath(os.path.join(sys.argv[2], "VEP_output"))
-script_output_dir = output_vcf_path
+output_vcf_path = os.path.abspath(sys.argv[2])
+script_output_dir = os.path.join(output_vcf_path, "VEP_output")
 os.makedirs(script_output_dir, exist_ok=True)
 
 vcf_files = [f for f in os.listdir(input_vcf_path) if f.endswith((".vcf.gz", ".vcf"))]
@@ -38,9 +39,9 @@ vcf_files = [f for f in os.listdir(input_vcf_path) if f.endswith((".vcf.gz", ".v
 bash_template = """#!/bin/bash
 
 SAMPLE_ID={sample_id}
-INPUT_VCF={input_vcf_path}/${{SAMPLE_ID}}.vcf.gz
+INPUT_VCF={input_vcf_path}/{full_vcf_name}
 INPUT_SCRIPT_PATH={input_script_path}
-OUTPUT_VCF_PATH={output_vcf_path}/${{SAMPLE_ID}}
+OUTPUT_VCF_PATH={output_vcf_path}/VEP_output/${{SAMPLE_ID}}
 SCRIPT_PATH=${{OUTPUT_VCF_PATH}}/script
 
 mkdir -p ${{SCRIPT_PATH}}
@@ -108,7 +109,7 @@ echo "Stage 2 Job ID: ${{JOB_ID_02}}"
 
 # === Write the bash scripts and run them ===
 for vcf in vcf_files:
-    sample_id = vcf.replace(".vcf.gz", "")
+    sample_id = re.sub(r'\.vcf(\.gz)?$', '', vcf)
     bash_path = os.path.join(script_output_dir, f"{sample_id}_submit.sh")
 
     with open(bash_path, "w") as f:
@@ -116,7 +117,8 @@ for vcf in vcf_files:
             sample_id=sample_id,
             input_vcf_path=input_vcf_path,
             output_vcf_path=output_vcf_path,
-            input_script_path=input_script_path
+            input_script_path=input_script_path,
+            full_vcf_name=vcf
         ))
 
     subprocess.run(["sh", bash_path])
