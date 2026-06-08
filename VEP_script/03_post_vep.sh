@@ -77,9 +77,9 @@ fi
 split_vep_with_gt='bcftools +split-vep -H -f "%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t[%GT\t%DP\t%AD{0}\t%AD{1}\t%VAF]\t%CSQ\n" -A tab'
 split_vep_no_gt='bcftools +split-vep -H -f "%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t%CSQ\n" -A tab'
 fix_header() {
-    sed -E '1s/\[[0-9]+\]//g' \
-    | sed 's/\#//' \
-    | awk 'BEGIN{FS=OFS="\t"} NR==1 {for(i=1;i<=NF;i++) if($i=="AD") {if(!f) {$i="AD_ref"; f=1} else $i="AD_alt"}} 1'
+    sed -E '1s/\[[0-9]+\]//g' | \
+    sed 's/\#//' | \
+    awk 'BEGIN{FS=OFS="\t"} NR==1 {for(i=1;i<=NF;i++) if($i=="AD") {if(!f) {$i="AD_ref"; f=1} else $i="AD_alt"}} 1'
 }
 
 run_tsv() {
@@ -87,17 +87,17 @@ run_tsv() {
     local output_tsv="$2"
 
     if [[ "$FILL_TAGS_ARGS" == "NONE" ]]; then
-        bcftools +split-vep -H -f '%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t%CSQ\n' -A tab "$input_vcf" \
-            | sed -E '1s/\[[0-9]+\]//g' | sed 's/\#//' \
+        bcftools +split-vep -H -f '%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t%CSQ\n' -A tab "$input_vcf" | \
+            sed -E '1s/\[[0-9]+\]//g' | sed 's/\#//' \
             > "$output_tsv"
     elif [[ -z "$FILL_TAGS_ARGS" ]]; then
-        bcftools +split-vep -H -f '%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t[%GT\t%DP\t%AD{0}\t%AD{1}\t%VAF]\t%CSQ\n' -A tab "$input_vcf" \
-            | fix_header \
+        bcftools +split-vep -H -f '%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t[%GT\t%DP\t%AD{0}\t%AD{1}\t%VAF]\t%CSQ\n' -A tab "$input_vcf" | \
+            fix_header \
             > "$output_tsv"
     else
-        bcftools +fill-tags "$input_vcf" -- -t "$FILL_TAGS_ARGS" \
-            | bcftools +split-vep -H -f '%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t[%GT\t%DP\t%AD{0}\t%AD{1}\t%VAF]\t%CSQ\n' -A tab \
-            | fix_header \
+        bcftools +fill-tags "$input_vcf" -- -t "$FILL_TAGS_ARGS" | \
+            bcftools +split-vep -H -f '%CHROM\t%POS\t%REF\t%ALT\t%FILTER\t[%GT\t%DP\t%AD{0}\t%AD{1}\t%VAF]\t%CSQ\n' -A tab | \
+            fix_header \
             > "$output_tsv"
     fi
 }
