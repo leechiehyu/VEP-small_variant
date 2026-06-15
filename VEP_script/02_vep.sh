@@ -41,7 +41,7 @@ pLI=${VEP_PLUGIN_DIR}/pLI_values.txt
 # custom annotation file paths
 DVD=${Custom_Annotation}/DVD/DVDv9.2_GRCh38.filter.vcf.gz
 ClinVar=${Custom_Annotation}/ClinVar20251109_DB/clinvar_20251109.cleaned.vcf.gz
-MitoMap=${Custom_Annotation}/MitoMap/MitoMap_disease_20230621.norm.vcf.gz
+MitoMap=${Custom_Annotation}/MitoMap/MitoMap_disease_20260418.norm.vcf.gz
 TWB_NTU_SNV=${Custom_Annotation}/TWB_NTU_SNV/TWB1490_snv_custom_addAF.vcf.bgz
 TWB_official_SNV=${Custom_Annotation}/TWB_official_SNV/TWB_official_snv_indel_AF.vcf.gz
 SG10K_SNV="${Custom_Annotation}/SG10K/SG10K_Health_r5.3.2.sites.chr###CHR###.filtered.vcf.gz"
