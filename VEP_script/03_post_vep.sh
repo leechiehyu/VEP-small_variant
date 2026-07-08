@@ -47,10 +47,13 @@ variant_count=$(bcftools view -H "$FINAL_VCF" | wc -l)
 echo -e "[INFO] - Total variants in final VEP annotated VCF: $variant_count"
 
 FINAL_VCF_MANE=${SAMPLE}.vep.mane_plus_clinical.vcf.gz
-bcftools index -t -f $FINAL_VCF_MANE
-variant_count=$(bcftools view -H "$FINAL_VCF_MANE" | wc -l)
-echo -e "[INFO] - Total variants with both MANE select and MANE plus clinical in VEP annotated VCF: ${variant_count}\n"
-
+if [[ -f "$FINAL_VCF_MANE" ]]; then
+    bcftools index -t -f $FINAL_VCF_MANE
+    variant_count=$(bcftools view -H "$FINAL_VCF_MANE" | wc -l)
+    echo -e "[INFO] - Total variants with both MANE select and MANE plus clinical in VEP annotated VCF: ${variant_count}\n"
+else
+    echo -e "[INFO] - MANE plus clinical VCF not found. Skipping...\n"
+fi
 
 # generate tsv
 ### pipefail temporarily disabled to avoid script exit when encountering error in this step
@@ -102,7 +105,9 @@ run_tsv() {
     fi
 }
 run_tsv "$FINAL_VCF"      "${SAMPLE}.vep.tsv"
-run_tsv "$FINAL_VCF_MANE" "${SAMPLE}.vep.mane_plus_clinical.tsv"
+if [[ -f "$FINAL_VCF_MANE" ]]; then
+    run_tsv "$FINAL_VCF_MANE" "${SAMPLE}.vep.mane_plus_clinical.tsv"
+fi
 
 echo -e "\n$(date '+%Y-%m-%d %H:%M:%S') - Generate TSV done"
 
