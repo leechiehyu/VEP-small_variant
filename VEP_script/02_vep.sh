@@ -34,7 +34,7 @@ dbscSNV=${VEP_PLUGIN_DATA}/dbscSNV1.1/dbscSNV1.1_GRCh38.txt.gz
 DosageSensitivity=${VEP_PLUGIN_DATA}/DosageSensitivity/Collins_rCNV_2022.dosage_sensitivity_scores.tsv.gz
 satMutMPRA=${VEP_PLUGIN_DATA}/satMutMPRA/satMutMPRA_GRCh38_ALL.gz
 MaxEntScan=${VEP_PLUGIN_DATA}/MaxEntScan/fordownload
-LOEUF=${VEP_PLUGIN_DATA}/LOEUF_yuting/supplement/loeuf_dataset_grch38.tsv.gz
+LOEUF=${VEP_PLUGIN_DATA}/LOEUF_GRCH38/loeuf_dataset_grch38.tsv.gz
 LoFtool=${VEP_PLUGIN_DIR}/LoFtool_scores.txt
 pLI=${VEP_PLUGIN_DIR}/pLI_values.txt
 
